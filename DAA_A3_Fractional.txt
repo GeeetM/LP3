@@ -1,0 +1,60 @@
+def fractional_knapsack(items, capacity):
+    # Calculate the value-to-weight ratio for each item
+    for item in items:
+        item.append(item[1] / item[0])
+
+    # Sort items by their value-to-weight ratio in descending order
+    items.sort(key=lambda x: x[2], reverse=True)
+
+    total_value = 0
+    knapsack = []
+
+    for item in items:
+        if capacity >= item[0]:
+            # If the entire item can be added, add it and update the capacity
+            knapsack.append((item[0], item[1]))
+            total_value += item[1]
+            capacity -= item[0]
+        else:
+            # If only a fraction of the item can be added, add the fraction
+            fraction = capacity / item[0]
+            knapsack.append((item[0] * fraction, item[1] * fraction))
+            total_value += item[1] * fraction
+            break
+
+    return knapsack, total_value
+
+if __name__ == "__main":
+    num_items = int(input("Enter the number of items: "))
+    capacity = float(input("Enter the maximum capacity of the knapsack: "))
+
+    items = []
+    for i in range(num_items):
+        weight = float(input(f"Enter the weight of item {i + 1}: "))
+        value = float(input(f"Enter the value of item {i + 1}: "))
+        items.append([weight, value])
+
+    knapsack, total_value = fractional_knapsack(items, capacity)
+
+    print("Optimal Knapsack Configuration:")
+    for item in knapsack:
+        print(f"Weight: {item[0]}, Value: {item[1]}")
+
+    print(f"Total Value in Knapsack: {total_value}")
+
+
+Theory:
+The Fractional Knapsack Problem is a classic optimization problem in computer science and mathematics. It is a variation of the Knapsack Problem, which is a combinatorial problem that seeks to find the most valuable combination of items to include in a knapsack (or backpack) with a limited carrying capacity.
+In the Fractional Knapsack Problem, the objective is to determine how to select fractions of items to maximize the total value in the knapsack, subject to the constraint of not exceeding the knapsack's weight capacity. Each item has a weight and a value, and you can take a fraction of an item if necessary. The goal is to maximize the total value of the selected items.
+
+The problem can be formally defined as follows:
+
+You are given a set of 'n' items, each with a weight 'w_i' and a value 'v_i' for 'i' in the range [1, n].
+You have a knapsack with a weight capacity 'W'.
+You can take fractions (0 to 1) of items.
+You want to maximize the total value in the knapsack without exceeding its weight capacity.
+The Fractional Knapsack Problem can be solved using a greedy algorithm. The algorithm sorts the items by their value-to-weight ratio (v_i / w_i) in descending order and then adds items to the knapsack in that order until the capacity is exhausted. If an item can't be fully added, a fraction of it is taken to maximize the value-to-weight ratio.
+
+The Fractional Knapsack Problem is different from the 0/1 Knapsack Problem, where you must make binary decisions (either take an item completely or not at all). Fractional Knapsack allows for taking fractions of items, which often results in a non-integer solution.
+
+Applications of the Fractional Knapsack Problem can be found in various fields, including resource allocation, production planning, and portfolio optimization, where one has to maximize value subject to certain constraints.
