@@ -1,0 +1,107 @@
+'''Huffman coding'''
+
+import heapq
+from collections import defaultdict
+
+class HuffmanNode:
+    def __init__(self, char, frequency):
+        self.char = char
+        self.frequency = frequency
+        self.left = None
+        self.right = None
+
+    def __lt__(self, other):
+        return self.frequency < other.frequency
+
+def build_huffman_tree(freq_map):
+    priority_queue = [HuffmanNode(char, freq) for char, freq in freq_map.items()]
+    heapq.heapify(priority_queue)
+
+    while len(priority_queue) > 1:
+        left_node = heapq.heappop(priority_queue)
+        right_node = heapq.heappop(priority_queue)
+
+        internal_node = HuffmanNode(None, left_node.frequency + right_node.frequency)
+        internal_node.left = left_node
+        internal_node.right = right_node
+
+        heapq.heappush(priority_queue, internal_node)
+
+    return priority_queue[0]
+
+def build_huffman_codes(root, current_code, huffman_codes):
+    if root is None:
+        return
+
+    if root.char is not None:
+        huffman_codes[root.char] = current_code
+    build_huffman_codes(root.left, current_code + '0', huffman_codes)
+    build_huffman_codes(root.right, current_code + '1', huffman_codes)
+
+def huffman_encoding(data):
+    if not data:
+        return None, None
+
+    freq_map = defaultdict(int)
+    for char in data:
+        freq_map[char] += 1
+
+    root = build_huffman_tree(freq_map)
+    huffman_codes = {}
+    build_huffman_codes(root, '', huffman_codes)
+
+    encoded_data = ''.join(huffman_codes[char] for char in data)
+    return encoded_data, root
+
+def huffman_decoding(encoded_data, root):
+    if root is None:
+        return ''
+
+    decoded_data = []
+    current_node = root
+
+    for bit in encoded_data:
+        if bit == '0':
+            current_node = current_node.left
+        else:
+            current_node = current_node.right
+
+        if current_node.char is not None:
+            decoded_data.append(current_node.char)
+            current_node = root
+
+    return ''.join(decoded_data)
+
+if __name__ == "__main__":
+    # Example usage
+    data = "Hello everyone"
+    
+    encoded_data, huffman_tree = huffman_encoding(data)
+    print(f"Encoded data: {encoded_data}")
+
+    decoded_data = huffman_decoding(encoded_data, huffman_tree)
+    print(f"Decoded data: {decoded_data}")
+
+
+Theory: Huffman coding is a variable-length prefix coding algorithm used for lossless data compression. It assigns shorter codes to more frequent characters and longer codes to less frequent characters. Here's a Python program to implement Huffman Encoding using a greedy strategy. This program demonstrates how to encode and decode data using Huffman coding. The build_huffman_tree function constructs the Huffman tree, and build_huffman_codes assigns binary codes to each character. The huffman_encoding and huffman_decoding functions perform encoding and decoding, respectively.
+Huffman coding is a variable-length prefix coding algorithm used for lossless data compression. It was developed by David A. Huffman in 1952 while he was a Ph.D. student at MIT. The main idea behind Huffman coding is to assign shorter binary codes to more frequent symbols and longer codes to less frequent symbols, thereby reducing the overall length of the encoded data. It is widely used in data compression applications, including image compression, text compression, and various forms of data transmission.
+
+Here's how the Huffman coding algorithm works:
+
+Frequency Counting: First, the algorithm counts the frequency of each symbol (e.g., characters in a text document, pixels in an image, or any other data elements) in the input data.
+
+Building a Huffman Tree: Next, it constructs a binary tree, known as the Huffman tree, using a priority queue (usually a min-heap). The algorithm repeatedly combines the two nodes with the lowest frequencies and creates a parent node with a frequency equal to the sum of its children. This process continues until there is only one node left in the priority queue, which becomes the root of the Huffman tree.
+
+Assigning Binary Codes: Once the Huffman tree is constructed, the binary codes are assigned to each symbol by traversing the tree from the root to the leaves. A left traversal is assigned '0', and a right traversal is assigned '1'. The codes are determined based on the path from the root to each leaf node.
+
+Encoding: With the binary codes assigned, the input data is then encoded using these codes. The encoded data is a sequence of bits, where each symbol is replaced by its corresponding binary code.
+
+Decoding: To decode the data, the Huffman tree is used. Starting at the root of the tree, the encoded bits are processed one by one. As each bit is read, the traversal moves left or right in the tree, and when a leaf node is reached, the corresponding symbol is output. This process continues until the entire encoded data is decoded.
+
+Huffman coding achieves data compression by representing more common symbols with shorter codes and less common symbols with longer codes, resulting in a more efficient representation of the data. The algorithm is guaranteed to be prefix-free, meaning no binary code for one symbol is a prefix of the code for another symbol, ensuring unambiguous decoding.
+
+
+
+
+
+
