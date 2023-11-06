@@ -1,0 +1,38 @@
+'''Non recursive fibonacci'''
+def fibonacci_non_recursive(n):
+    if n <= 0:
+        return []
+    elif n == 1:
+        return [0]
+    elif n == 2:
+        return [0, 1]
+
+    fibonacci_list = [0, 1]
+    for i in range(2, n):
+        next_fib = fibonacci_list[-1] + fibonacci_list[-2]
+        fibonacci_list.append(next_fib)
+    return fibonacci_list
+
+# User input for the non-recursive program
+n = int(input("Enter the number of Fibonacci numbers to generate: "))
+fibonacci_numbers = fibonacci_non_recursive(n)
+print(f"Fibonacci numbers: {fibonacci_numbers}")
+
+
+'''Recursive Fibonacci'''
+def fibonacci_recursive(n):
+    if n <= 0:
+        return []
+    elif n == 1:
+        return [0]
+    elif n == 2:
+        return [0, 1]
+    else:
+        prev_fib = fibonacci_recursive(n - 1)
+        next_fib = prev_fib[-1] + prev_fib[-2]
+        return prev_fib + [next_fib]
+
+# User input for the recursive program
+n = int(input("Enter the number of Fibonacci numbers to generate: "))
+fibonacci_numbers = fibonacci_recursive(n)
+print(f"Fibonacci numbers: {fibonacci_numbers}")
