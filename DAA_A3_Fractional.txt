@@ -24,7 +24,7 @@ def fractional_knapsack(items, capacity):
 
     return knapsack, total_value
 
-if __name__ == "__main":
+if __name__ == "__main__":
     num_items = int(input("Enter the number of items: "))
     capacity = float(input("Enter the maximum capacity of the knapsack: "))
 
